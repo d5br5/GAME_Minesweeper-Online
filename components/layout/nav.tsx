@@ -2,9 +2,11 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
 
-interface NavProps {}
+interface NavProps {
+	title: string;
+}
 
-const Nav = ({}: NavProps) => {
+const Nav = ({ title }: NavProps) => {
 	return (
 		<Container>
 			<Box>
@@ -15,9 +17,7 @@ const Nav = ({}: NavProps) => {
 						</ImgBtn>
 					</Link>
 				</BtnContainerLeft>
-				<Link href={"/"}>
-					<Title>Mine Sweeper</Title>
-				</Link>
+				<Title>{title}</Title>
 				<BtnContainerRight>
 					<Link href="/ranking">
 						<ImgBtn>
@@ -78,7 +78,6 @@ const BtnContainerRight = styled.div`
 const Title = styled.div`
 	font-weight: 400;
 	font-size: x-large;
-	cursor: pointer;
 `;
 
 export default Nav;

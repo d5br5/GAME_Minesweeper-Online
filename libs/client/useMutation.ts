@@ -24,7 +24,7 @@ const useMutation = <T = any>(url: string): UseMutationResult<T> => {
 			},
 			body: JSON.stringify(data),
 		})
-			.then((response) => response.json().catch(() => {}))
+			.then((response) => response.json())
 			.then((data) => setState((prev) => ({ ...prev, data })))
 			.catch((error) => setState((prev) => ({ ...prev, error })))
 			.finally(() => setState((prev) => ({ ...prev, loading: false })));

@@ -17,7 +17,8 @@ const Layout = ({ children, title }: LayoutProps) => {
 
 const Children = styled.div`
 	margin: 0 auto;
-	width: 800px;
+	max-width: 800px;
+	width: 100%;
 `;
 
 const Container = styled.div`

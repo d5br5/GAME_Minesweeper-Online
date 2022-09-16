@@ -80,13 +80,16 @@ const StartBtn = styled.div`
 	}
 `;
 
-const AuthContainer = styled.div`
+export const AuthContainer = styled.div`
 	display: flex;
 	gap: 25px;
 `;
 
-const AuthLink = styled.div`
+export const AuthLink = styled.div`
+	text-align: center;
 	text-decoration: underline;
+	font-size: small;
+	margin-top: -8px;
 `;
 
 export default Home;

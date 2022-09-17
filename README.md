@@ -1,34 +1,74 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# :pray: 3.Commit Rule
 
-## Getting Started
+### 메시지 구조
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
+```
+[Type] Subject
+--blank line--
+Body 
+--blank line--
+Footer(optional)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+$ git commit -m "this is Subject
+>> 
+>> this is Body
+>> 
+>> this is Footer"
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+// Github Desktop 사용시 
+// Summary(required) 란에 Type: Subject 입력
+// Description 란에 Body와 Footer입력 
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Type
+※ Type 첫 문자는 대문자 (CI 예외)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+|Commit Type|Description|
+|----|----|
+|Feat | 새로운 기능, 코드 추가|
+| Fix | 올바르지 않은 동작(버그) 수정|
+| Update | 개정, 개선, 버전 업데이트, API 변동| 
+|Remove | 코드 삭제.</br> ‘unnecessary’, ‘useless’, ‘unused’ 등의 수식어 활용|
+|Docs|문서 수정 (Readme 등)|
+| Comment| 필요한 주석 추가 및 변경|
+| Refactor| 코드 리팩토링|
+| Design| CSS, Image 등 사용자 UI 디자인 변경|
+| Style| 코드 스타일 혹은 포맷 수정|
+| Build| 빌드 관련 파일 수정|
+| CI|CI 관련 설정 변경|
+|Init | 라이브러리 설치|
+| Chore| 그 외 자잘한 수정|
 
-## Learn More
+### Subject, Body, Footer
 
-To learn more about Next.js, take a look at the following resources:
+|Message Part | Description |
+|-----|-----|
+|Subject      | 영어 최대 50글자. 마침표 및 특수기호 사용 X</br>  첫글자는 대문자로 작성</br> 현재 시제 사용 [ Changing, Changed (x) -> Change (o) ]</br>부연 설명 필요시 Body 활용|
+|Body|한 줄당 72자 내 작성. 필요시 개행 </br> '무엇을', '어떻게', '왜' 변경했는지 작성 필수 </br>가능한 상세히 작성|
+|Footer | Footer은 optional</br> 참고할 이슈번호 기재</br>Ref: #이슈번호 </br> ex) Ref: #34, #23
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# :scroll: 4.Branch Rule
 
-## Deploy on Vercel
+### 과정
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**develop** 의 최신 commit에서 각자 작업 브랜치 생성
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+작업 수행 후 commit하여 develop branch에 pull request
+
+### 브랜치 명
+
+`브랜치레벨/작업카테고리/작업기능내용` ex) feature/new/login
+
+| Branch Level | Description | 
+|----|----|
+|main | 최종 확인 완료 |
+| develop | 기능 개발 및 수정, 오류 해결 완료 버전 |
+| feature | 각자 작업 |
+
+| Work Category | Description | 
+|----|----|
+|new | 새로운 기능, 코드 추가|
+|fix| fix, update, refactor, remove 등 기능 개선 일체 |

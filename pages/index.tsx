@@ -1,9 +1,18 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
+import { useRecoilState } from "recoil";
+import { authState } from "@shared/states";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
 
-const Home: NextPage = () => {
+interface HomeState {
+	ok: boolean;
+	cookie: string;
+}
+
+const Home: NextPage<HomeState> = ({ ok, cookie }) => {
+	const [auth, setAuth] = useRecoilState(authState);
+	console.log("cookie", cookie);
 	return (
 		<Container>
 			<ImgContainer>
@@ -91,5 +100,15 @@ export const AuthLink = styled.div`
 	font-size: small;
 	margin-top: -8px;
 `;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+	const cookie = ctx.req?.headers.cookie || "";
+	return {
+		props: {
+			ok: true,
+			cookie,
+		},
+	};
+};
 
 export default Home;

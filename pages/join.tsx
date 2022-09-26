@@ -8,6 +8,7 @@ import Link from "next/link";
 import * as S from "@components/form/style";
 import { AuthLink } from "pages";
 import { useRouter } from "next/router";
+import useUser from "@libs/client/useUser";
 
 interface JoinForm {
 	userId: string;
@@ -19,6 +20,7 @@ interface JoinForm {
 }
 
 const Join = () => {
+	useUser();
 	const {
 		register,
 		watch,

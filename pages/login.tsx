@@ -6,6 +6,10 @@ import TextField from "@mui/material/TextField";
 import * as S from "@components/form/style";
 import Link from "next/link";
 import { AuthLink } from "pages";
+import { useSetRecoilState } from "recoil";
+import { authState } from "@shared/states";
+import { useRouter } from "next/router";
+import useUser from "@libs/client/useUser";
 
 interface LoginForm {
 	userId: string;
@@ -13,11 +17,14 @@ interface LoginForm {
 }
 
 const Login = () => {
+	useUser();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<LoginForm>({ mode: "all" });
+	const router = useRouter();
+	const authHandler = useSetRecoilState(authState);
 
 	const [login, { loading, data }] = useMutation("/api/auth/login");
 
@@ -27,11 +34,17 @@ const Login = () => {
 
 	useEffect(() => {
 		if (data && data?.ok === true) {
-			alert("login success!");
+			authHandler({
+				expiredAt: "tmp",
+				accessToken: data.data.accessToken,
+				isLoggedIn: true,
+				userId: data.data.userId,
+			});
+			router.replace("/game");
 		} else if (data?.ok === false) {
 			alert("login failed!");
 		}
-	}, [data]);
+	}, [data, authHandler, router]);
 
 	return (
 		<Layout title="LOGIN">

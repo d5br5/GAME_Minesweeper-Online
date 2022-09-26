@@ -12,7 +12,6 @@ interface HomeState {
 
 const Home: NextPage<HomeState> = ({ ok, cookie }) => {
 	const [auth, setAuth] = useRecoilState(authState);
-	console.log("cookie", cookie);
 	return (
 		<Container>
 			<ImgContainer>

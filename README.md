@@ -27,6 +27,7 @@ $ git commit -m "this is Subject
 
 |Commit Type|Description|
 |----|----|
+|Init| 라이브러리 설치|
 |Feat | 새로운 기능, 코드 추가|
 | Fix | 올바르지 않은 동작(버그) 수정|
 | Update | 개정, 개선, 버전 업데이트, API 변동| 

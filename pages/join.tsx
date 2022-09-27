@@ -40,7 +40,8 @@ const Join = () => {
 	const [userIdCheck, { loading: userIdCheckLoading, data: userIdCheckData }] =
 		useMutation("/api/auth/userId/exist");
 
-	const [join, { loading: joinLoading, data: joinData }] = useMutation("/api/auth/join");
+	const [join, { loading: joinLoading, data: joinData }] =
+		useMutation("/api/auth/join");
 
 	const onValid = (data: JoinForm) => {
 		if (joinLoading) return;
@@ -67,7 +68,9 @@ const Join = () => {
 
 	const isPasswordOK = () => {
 		return (
-			!!watchPW && errors.password?.type !== "minLength" && errors.password?.type !== "maxLength"
+			!!watchPW &&
+			errors.password?.type !== "minLength" &&
+			errors.password?.type !== "maxLength"
 		);
 	};
 
@@ -112,8 +115,9 @@ const Join = () => {
 	}, [router, joinData, reset]);
 
 	return (
-		<Layout title="JOIN">
+		<Layout>
 			<S.Form onSubmit={handleSubmit(onValid)}>
+				<S.Title>JOIN</S.Title>
 				<S.TextFieldContainer>
 					<S.FieldWithBtn>
 						<S.FieldBox>
@@ -130,7 +134,11 @@ const Join = () => {
 							/>
 						</S.FieldBox>
 						<S.CheckBtn onClick={onUserIdCheck} checked={userIdChecked}>
-							{userIdCheckLoading ? "loading.." : userIdChecked ? "✔ checked" : "check"}
+							{userIdCheckLoading
+								? "loading.."
+								: userIdChecked
+								? "✔ checked"
+								: "check"}
 						</S.CheckBtn>
 					</S.FieldWithBtn>
 					<div>
@@ -160,7 +168,9 @@ const Join = () => {
 						})}
 					/>
 					<div>
-						<S.InputGuide fullfilled={isPasswordOK()}>✓ Length : 8 - 16</S.InputGuide>
+						<S.InputGuide fullfilled={isPasswordOK()}>
+							✓ Length : 8 - 16
+						</S.InputGuide>
 						<S.InputGuide fullfilled={PATTERN.password.test(watchPW)}>
 							✓ Contains : number, char, special char
 						</S.InputGuide>
@@ -175,7 +185,9 @@ const Join = () => {
 						onChange={() => {}}
 					/>
 					<div>
-						<S.InputGuide fullfilled={isPasswordCheckOK()}>✓ Same with password above</S.InputGuide>
+						<S.InputGuide fullfilled={isPasswordCheckOK()}>
+							✓ Same with password above
+						</S.InputGuide>
 					</div>
 				</S.TextFieldContainer>
 
@@ -198,7 +210,11 @@ const Join = () => {
 							/>
 						</S.FieldBox>
 						<S.CheckBtn onClick={onEmailCheck} checked={emailChecked}>
-							{emailCheckLoading ? "loading.." : emailChecked ? "✔ checked" : "check"}
+							{emailCheckLoading
+								? "loading.."
+								: emailChecked
+								? "✔ checked"
+								: "check"}
 						</S.CheckBtn>
 					</S.FieldWithBtn>
 					<div>

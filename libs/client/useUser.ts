@@ -8,17 +8,17 @@ interface ProfileResponse {
 	user: User;
 }
 
-const routerForGuest = ["/login", "/join", "/ranking", "/"];
-const routerForUser = ["/game", "/profile", "/ranking", "/"];
+const routerForGuest = ["/login", "/join"];
+const routerForUser = ["/profile"];
 
 const useUser = () => {
 	const router = useRouter();
 	const { data, error } = useSWR<ProfileResponse>("/api/auth/me");
 	useEffect(() => {
-		if (data && !data.ok && !routerForGuest.includes(router.pathname)) {
+		if (data && !data.ok && routerForUser.includes(router.pathname)) {
 			router.replace(routerForGuest[0]);
 		}
-		if (data && data.ok && !routerForUser.includes(router.pathname)) {
+		if (data && data.ok && routerForGuest.includes(router.pathname)) {
 			router.replace(routerForUser[0]);
 		}
 	}, [data, router]);

@@ -1,12 +1,13 @@
 import Nav from "@components/layout/nav";
 import styled from "@emotion/styled";
+import { COLOR } from "@shared/constants";
 
 interface LayoutProps {
 	children: React.ReactNode;
-	title: string;
+	title?: string;
 }
 
-const Layout = ({ children, title }: LayoutProps) => {
+const Layout = ({ children, title = "MINE SWEEPER" }: LayoutProps) => {
 	return (
 		<Container>
 			<Nav title={title} />
@@ -28,6 +29,7 @@ const Container = styled.div`
 	min-height: 100vh;
 	padding-top: 100px;
 	justify-content: center;
+	background-color: ${COLOR.background};
 `;
 
 export default Layout;

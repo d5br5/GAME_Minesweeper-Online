@@ -1,14 +1,15 @@
 export const COLOR = {
 	white: "#ffffff",
-	black: "#000000",
+	black: "rgba(0,0,0,0.95)",
 	up: "#E74848",
 	down: "#487EE7",
 	border: "#D9D9D9",
 	graybg1: "#FBFBFB",
 	graybg2: "#F5F5F5",
 	darkgray: "#9E9E9E",
-	main: "#00448D",
+	main: "#00CED1",
 	confirm: "#0fba15",
+	background: "#ffffff",
 };
 
 export const PATTERN = {

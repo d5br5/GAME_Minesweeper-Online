@@ -47,8 +47,9 @@ const Login = () => {
 	}, [data, authHandler, router]);
 
 	return (
-		<Layout title="LOGIN">
+		<Layout>
 			<S.Form onSubmit={handleSubmit(onValid)}>
+				<S.Title>LOGIN</S.Title>
 				<TextField
 					size="small"
 					type="text"
@@ -61,7 +62,11 @@ const Login = () => {
 					type="password"
 					label="PASSWORD"
 					error={!!errors.password}
-					{...register("password", { required: true, minLength: 8, maxLength: 16 })}
+					{...register("password", {
+						required: true,
+						minLength: 8,
+						maxLength: 16,
+					})}
 				/>
 				<S.Submit type="submit">{loading ? "Loading..." : "LOGIN"}</S.Submit>
 				<AuthLink>

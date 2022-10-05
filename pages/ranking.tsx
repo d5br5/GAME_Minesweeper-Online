@@ -4,7 +4,6 @@ import useUser from "@libs/client/useUser";
 import Layout from "@components/layout";
 
 const Ranking = () => {
-	useUser();
 	const [auth, setAuth] = useRecoilState(authState);
 	return (
 		<Layout>

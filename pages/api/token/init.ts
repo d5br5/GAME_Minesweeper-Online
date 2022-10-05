@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import client from "@libs/server/client";
+import { createAccessToken } from "@libs/client/createToken";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const token = req.cookies.token || null;
+	console.log(token);
 	if (token === null) {
 		res.status(201).json({ ok: false });
 		return;
@@ -16,6 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			return;
 		}
 		const user = foundToken.user;
-		res.status(200).json({ ok: true, user });
+		const [accessToken, accessExpiredAt] = createAccessToken(user.userId);
+
+		res.status(200).json({ ok: true, user, accessToken, accessExpiredAt });
 	}
 }

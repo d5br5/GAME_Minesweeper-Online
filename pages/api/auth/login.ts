@@ -3,6 +3,7 @@ import client from "@libs/server/client";
 import { verifyPassword } from "@libs/client/encryptPassword";
 import { getClientIp } from "request-ip";
 import { createAccessToken, createRefreshToken } from "@libs/client/createToken";
+import { TOKEN_AGE_SEC } from "@shared/constants";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const { userId, password } = req.body;
@@ -21,8 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	if (ok) {
 		const clientIp = getClientIp(req)!;
-		const accessToken = createAccessToken(userId);
-		const refreshToken = createRefreshToken(userId, clientIp);
+		const [accessToken, accessExpiredAt] = createAccessToken(userId);
+		const [refreshToken, refreshExpiredAt] = createRefreshToken(userId, clientIp);
 
 		await client.user.update({
 			where: { userId },
@@ -30,7 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				refreshToken: {
 					create: {
 						token: refreshToken,
-						expiredAt: "3d",
+						expiredAt: refreshExpiredAt,
+						clientIp: "tmp",
 					},
 				},
 			},
@@ -38,12 +40,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		res.setHeader(
 			"Set-Cookie",
-			`token=${refreshToken}; Expires=Wed; Secure; HttpOnly; SameSite=Strict`
+			`token=${refreshToken}; Max-Age=${TOKEN_AGE_SEC.refresh}; Secure; HttpOnly; SameSite=Strict; path=/ `
 		);
 
-		res
-			.status(200)
-			.json({ ok: true, msg: "login success", data: { accessToken, refreshToken, userId } });
+		res.status(200).json({
+			ok: true,
+			msg: "login success",
+			data: { accessToken, refreshToken, userId, accessExpiredAt, refreshExpiredAt },
+		});
 	} else {
 		res.status(401).json({ ok: false, msg: "wrong password" });
 	}

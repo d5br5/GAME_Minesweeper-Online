@@ -1,23 +1,33 @@
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { AuthLink } from "pages";
+import { useSetRecoilState } from "recoil";
+import { authState } from "@shared/states";
+import { useRouter } from "next/router";
 import useMutation from "@libs/client/useMutation";
 import Layout from "@components/layout";
 import TextField from "@mui/material/TextField";
 import * as S from "@components/form/style";
 import Link from "next/link";
-import { AuthLink } from "pages";
-import { useSetRecoilState } from "recoil";
-import { authState } from "@shared/states";
-import { useRouter } from "next/router";
-import useUser from "@libs/client/useUser";
 
 interface LoginForm {
 	userId: string;
 	password: string;
 }
 
+interface LoginResponse {
+	ok: boolean;
+	msg: string;
+	data: {
+		accessToken: string;
+		refreshToken: string;
+		userId: string;
+		accessExpiredAt: number;
+		refreshExpiredAt: number;
+	};
+}
+
 const Login = () => {
-	useUser();
 	const {
 		register,
 		handleSubmit,
@@ -26,7 +36,7 @@ const Login = () => {
 	const router = useRouter();
 	const authHandler = useSetRecoilState(authState);
 
-	const [login, { loading, data }] = useMutation("/api/auth/login");
+	const [login, { loading, data }] = useMutation<LoginResponse>("/api/auth/login");
 
 	const onValid = (data: LoginForm) => {
 		login(data);
@@ -35,7 +45,7 @@ const Login = () => {
 	useEffect(() => {
 		if (data && data?.ok === true) {
 			authHandler({
-				expiredAt: "tmp",
+				accessExpiredAt: data.data.accessExpiredAt,
 				accessToken: data.data.accessToken,
 				isLoggedIn: true,
 				userId: data.data.userId,

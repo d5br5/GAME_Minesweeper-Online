@@ -16,3 +16,9 @@ export const PATTERN = {
 	email: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i,
 	password: /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^+\-=])(?=\S+$).*$/i,
 };
+
+export const TOKEN_AGE_SEC = {
+	// second
+	refresh: 3600 * 24 * 2,
+	access: 3600 * 2,
+};

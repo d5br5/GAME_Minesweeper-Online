@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { authState } from "@shared/states";
 import styled from "@emotion/styled";
 import Image from "next/image";
@@ -13,6 +13,7 @@ interface HomeState {
 
 const Home: NextPage<HomeState> = ({ ok, cookie }) => {
 	const [auth, setAuth] = useRecoilState(authState);
+	const resetAuth = useResetRecoilState(authState);
 	return (
 		<Full>
 			<Container>
@@ -27,12 +28,18 @@ const Home: NextPage<HomeState> = ({ ok, cookie }) => {
 					<StartBtn>Game Start</StartBtn>
 				</Link>
 				<AuthContainer>
-					<AuthLink>
-						<Link href={"/login"}>Sign In</Link>
-					</AuthLink>
-					<AuthLink>
-						<Link href={"/join"}>Join</Link>
-					</AuthLink>
+					{auth.isLoggedIn ? (
+						<AuthLink onClick={() => resetAuth()}>Log out</AuthLink>
+					) : (
+						<>
+							<AuthLink>
+								<Link href={"/login"}>Sign In</Link>
+							</AuthLink>
+							<AuthLink>
+								<Link href={"/join"}>Join</Link>
+							</AuthLink>
+						</>
+					)}
 				</AuthContainer>
 			</Container>
 		</Full>

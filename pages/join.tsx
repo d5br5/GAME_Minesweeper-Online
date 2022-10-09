@@ -8,6 +8,7 @@ import Link from "next/link";
 import * as S from "@components/form/style";
 import { AuthLink } from "pages";
 import { useRouter } from "next/router";
+import withGuest from "@components/auth/withGuest";
 
 interface JoinForm {
 	userId: string;
@@ -33,12 +34,13 @@ const Join = () => {
 
 	const [emailChecked, setEmailChecked] = useState(false);
 	const [emailCheck, { loading: emailCheckLoading, data: emailCheckData }] =
-		useMutation("/api/auth/email/exist");
+		useMutation("/api/auth/exist/email");
 	const [userIdChecked, setUserIdChecked] = useState(false);
 	const [userIdCheck, { loading: userIdCheckLoading, data: userIdCheckData }] =
-		useMutation("/api/auth/userId/exist");
+		useMutation("/api/auth/exist/userId");
 
-	const [join, { loading: joinLoading, data: joinData }] = useMutation("/api/auth/join");
+	const [join, { loading: joinLoading, data: joinData }] =
+		useMutation("/api/auth/join");
 
 	const onValid = (data: JoinForm) => {
 		if (joinLoading) return;
@@ -65,7 +67,9 @@ const Join = () => {
 
 	const isPasswordOK = () => {
 		return (
-			!!watchPW && errors.password?.type !== "minLength" && errors.password?.type !== "maxLength"
+			!!watchPW &&
+			errors.password?.type !== "minLength" &&
+			errors.password?.type !== "maxLength"
 		);
 	};
 
@@ -110,8 +114,12 @@ const Join = () => {
 	}, [router, joinData, reset]);
 
 	return (
-		<Layout title="JOIN">
-			<S.Form onSubmit={handleSubmit(onValid)}>
+		<Layout>
+			<S.Form
+				onSubmit={handleSubmit(onValid)}
+				onChange={() => console.log(errors.passwordCheck)}
+			>
+				<S.Title>JOIN</S.Title>
 				<S.TextFieldContainer>
 					<S.FieldWithBtn>
 						<S.FieldBox>
@@ -128,7 +136,11 @@ const Join = () => {
 							/>
 						</S.FieldBox>
 						<S.CheckBtn onClick={onUserIdCheck} checked={userIdChecked}>
-							{userIdCheckLoading ? "loading.." : userIdChecked ? "✔ checked" : "check"}
+							{userIdCheckLoading
+								? "loading.."
+								: userIdChecked
+								? "✔ checked"
+								: "check"}
 						</S.CheckBtn>
 					</S.FieldWithBtn>
 					<div>
@@ -158,7 +170,9 @@ const Join = () => {
 						})}
 					/>
 					<div>
-						<S.InputGuide fullfilled={isPasswordOK()}>✓ Length : 8 - 16</S.InputGuide>
+						<S.InputGuide fullfilled={isPasswordOK()}>
+							✓ Length : 8 - 16
+						</S.InputGuide>
 						<S.InputGuide fullfilled={PATTERN.password.test(watchPW)}>
 							✓ Contains : number, char, special char
 						</S.InputGuide>
@@ -169,12 +183,19 @@ const Join = () => {
 						size="small"
 						type="password"
 						label="PASSWORD-CHECK"
-						{...register("passwordCheck", { required: true, minLength: 8 })}
-						onChange={() => {}}
+						{...register("passwordCheck", {
+							required: true,
+							minLength: 8,
+							// validate: (val) => {
+							// 	if (watch("password") !== val) return "do not match";
+							// },
+						})}
 					/>
-					<div>
-						<S.InputGuide fullfilled={isPasswordCheckOK()}>✓ Same with password above</S.InputGuide>
-					</div>
+					{/* <div>
+						<S.InputGuide fullfilled={true}>
+							✓ Same with password above
+						</S.InputGuide>
+					</div> */}
 				</S.TextFieldContainer>
 
 				<S.TextFieldContainer>
@@ -196,7 +217,11 @@ const Join = () => {
 							/>
 						</S.FieldBox>
 						<S.CheckBtn onClick={onEmailCheck} checked={emailChecked}>
-							{emailCheckLoading ? "loading.." : emailChecked ? "✔ checked" : "check"}
+							{emailCheckLoading
+								? "loading.."
+								: emailChecked
+								? "✔ checked"
+								: "check"}
 						</S.CheckBtn>
 					</S.FieldWithBtn>
 					<div>
@@ -234,4 +259,4 @@ const Join = () => {
 	);
 };
 
-export default Join;
+export default withGuest(Join);

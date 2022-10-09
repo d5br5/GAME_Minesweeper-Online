@@ -13,19 +13,20 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  userId        String    @unique
+  id            Int            @id @default(autoincrement())
+  userId        String         @unique
   name          String
   nickname      String
   password      String
   salt          String
-  email         String    @unique
+  email         String         @unique
   emailVerified Boolean?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   favs          Fav[]
   voices        Voice[]
   History       History[]
+  refreshToken  RefreshToken[]
 }
 
 model Voice {
@@ -62,7 +63,7 @@ model VoiceCategory {
 model VoiceStatus {
   id     Int     @id @default(autoincrement())
   status String
-  Voice  Voice[]
+  voice  Voice[]
 }
 
 model History {
@@ -78,13 +79,22 @@ model History {
 }
 
 model HistoryStatus {
-  id      Int       @id @default(autoincrement())
-  status  String
-  History History[]
+  id        Int       @id @default(autoincrement())
+  status    String
+  histories History[]
 }
 
 model Level {
-  id      Int       @id @default(autoincrement())
-  name    String
-  History History[]
+  id        Int       @id @default(autoincrement())
+  name      String
+  histories History[]
+}
+
+model RefreshToken {
+  id        Int    @id @default(autoincrement())
+  token     String @db.LongText
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int
+  expiredAt BigInt
+  clientIp  String
 }

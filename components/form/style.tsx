@@ -11,6 +11,11 @@ export const Form = styled.form`
 	padding: 0 10px;
 `;
 
+export const Title = styled.div`
+	text-align: center;
+	color: ${COLOR.black};
+`;
+
 export const FieldWithBtn = styled.div`
 	display: flex;
 	width: 100%;
@@ -25,7 +30,8 @@ export const FieldBox = styled.div`
 `;
 
 export const CheckBtn = styled.div<{ checked: boolean }>`
-	border: 1px solid ${(props) => (props.checked ? COLOR.confirm : COLOR.darkgray)};
+	border: 1px solid
+		${(props) => (props.checked ? COLOR.confirm : COLOR.darkgray)};
 	padding: 2px 5px;
 	font-size: small;
 	text-align: center;
@@ -43,7 +49,11 @@ export const TextFieldContainer = styled.div`
 
 export const InputGuide = styled.p<{ fullfilled?: boolean; banned?: boolean }>`
 	color: ${(props) =>
-		props.fullfilled ? COLOR.confirm : props.banned ? COLOR.up : COLOR.darkgray};
+		props.fullfilled
+			? COLOR.confirm
+			: props.banned
+			? COLOR.up
+			: COLOR.darkgray};
 	font-size: small;
 	margin: 8px 5px;
 `;
@@ -51,15 +61,20 @@ export const InputGuide = styled.p<{ fullfilled?: boolean; banned?: boolean }>`
 export const Submit = styled.button`
 	height: 40px;
 	border-radius: 5px;
-	border: 1px solid ${COLOR.darkgray};
-	font-weight: 500;
+	border: 2px solid ${COLOR.main};
+	font-weight: 600;
 	font-size: medium;
 	margin-top: 20px;
+	transition: all ease 0.2s;
 	cursor: pointer;
-	&:focus {
-		outline: 1px solid ${COLOR.main};
-		border: 1px solid ${COLOR.main};
+	background-color: ${COLOR.main};
+	color: ${COLOR.white};
+
+	&:focus,
+	&:hover {
+		outline: none;
 		outline-offset: 1px;
+		background-color: ${COLOR.white};
 		color: ${COLOR.main};
 	}
 `;

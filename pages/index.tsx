@@ -1,32 +1,65 @@
 import type { NextPage } from "next";
+import { useRecoilValue, useResetRecoilState } from "recoil";
+import { authState } from "@shared/states";
+import { COLOR } from "@shared/constants";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
+import useMutation from "@libs/client/useMutation";
 
-const Home: NextPage = () => {
+interface HomeState {
+	ok: boolean;
+	cookie: string;
+}
+
+const Home: NextPage<HomeState> = () => {
+	const auth = useRecoilValue(authState);
+	const resetAuth = useResetRecoilState(authState);
+	const [logout, { loading }] = useMutation("/api/auth/logout");
+
+	const onLogout = () => {
+		if (loading) return;
+		resetAuth();
+		logout({});
+	};
+
 	return (
-		<Container>
-			<ImgContainer>
-				<Image alt="main logo bomb" layout="fill" src={"/mine.png"} />
-			</ImgContainer>
-			<Slogan>
-				<SemiTitle>Mind-Blowing</SemiTitle>
-				<MainTitle>Mine-Sweeper</MainTitle>
-			</Slogan>
-			<Link href={"/game"}>
-				<StartBtn>Game Start</StartBtn>
-			</Link>
-			<AuthContainer>
-				<AuthLink>
-					<Link href={"/login"}>Sign In</Link>
-				</AuthLink>
-				<AuthLink>
-					<Link href={"/join"}>Join</Link>
-				</AuthLink>
-			</AuthContainer>
-		</Container>
+		<Full>
+			<Container>
+				<ImgContainer>
+					<Image alt="main logo bomb" layout="fill" src={"/mine.png"} />
+				</ImgContainer>
+				<Slogan>
+					<SemiTitle>Mind-Blowing</SemiTitle>
+					<MainTitle>Mine-Sweeper</MainTitle>
+				</Slogan>
+				<Link href={"/game"}>
+					<StartBtn>Game Start</StartBtn>
+				</Link>
+				<AuthContainer>
+					{auth.loading ? (
+						<AuthLink>Loading...</AuthLink>
+					) : auth.isLoggedIn ? (
+						<AuthLink onClick={onLogout}>Log out</AuthLink>
+					) : (
+						<>
+							<AuthLink>
+								<Link href={"/login"}>Sign In</Link>
+							</AuthLink>
+							<AuthLink>
+								<Link href={"/join"}>Join</Link>
+							</AuthLink>
+						</>
+					)}
+				</AuthContainer>
+			</Container>
+		</Full>
 	);
 };
+
+const Full = styled.div`
+	background-color: ${COLOR.background};
+`;
 
 const Container = styled.div`
 	width: 500px;
@@ -63,20 +96,24 @@ const SemiTitle = styled.div`
 const MainTitle = styled.div`
 	font-size: 3.2rem;
 	font-weight: 900;
+	color: ${COLOR.main};
 `;
 
 const StartBtn = styled.div`
-	width: 340px;
+	width: 200px;
 	padding: 10px;
-	border: 3px solid black;
+	border: 2px solid ${COLOR.main};
+	background-color: ${COLOR.white};
+	color: ${COLOR.main};
 	font-weight: 600;
 	border-radius: 7px;
-	font-size: xx-large;
+	font-size: x-large;
 	margin-top: 20px;
 	transition: all ease 0.2s;
 	cursor: pointer;
 	&:hover {
-		background-color: aqua;
+		background-color: ${COLOR.main};
+		color: white;
 	}
 `;
 
@@ -90,6 +127,8 @@ export const AuthLink = styled.div`
 	text-decoration: underline;
 	font-size: small;
 	margin-top: -8px;
+	cursor: pointer;
+	color: ${COLOR.darkgray};
 `;
 
 export default Home;

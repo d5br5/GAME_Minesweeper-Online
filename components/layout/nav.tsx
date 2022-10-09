@@ -1,34 +1,56 @@
 import styled from "@emotion/styled";
+import { authState } from "@shared/states";
 import Image from "next/image";
 import Link from "next/link";
+import { useRecoilValue } from "recoil";
 
 interface NavProps {
 	title: string;
 }
 
 const Nav = ({ title }: NavProps) => {
+	const auth = useRecoilValue(authState);
 	return (
 		<Container>
 			<Box>
 				<BtnContainerLeft>
 					<Link href="/game">
 						<ImgBtn>
-							<Image alt="start game" title="start game" src="/bomb.png" layout="fill" />
+							<Image
+								alt="start game"
+								title="start game"
+								src="/bomb.png"
+								layout="fill"
+							/>
 						</ImgBtn>
 					</Link>
 				</BtnContainerLeft>
-				<Title>{title}</Title>
+				<Link href={"/"}>
+					<Title>{title}</Title>
+				</Link>
 				<BtnContainerRight>
 					<Link href="/ranking">
 						<ImgBtn>
-							<Image alt="go to ranking" title="ranking" src="/ranking.png" layout="fill" />
+							<Image
+								alt="go to ranking"
+								title="ranking"
+								src="/ranking.png"
+								layout="fill"
+							/>
 						</ImgBtn>
 					</Link>
-					<Link href="/profile">
-						<ImgBtn>
-							<Image alt="go to profile" title="profile" src="/user.png" layout="fill" />
-						</ImgBtn>
-					</Link>
+					{auth.isLoggedIn && (
+						<Link href="/profile">
+							<ImgBtn>
+								<Image
+									alt="go to profile"
+									title="profile"
+									src="/user.png"
+									layout="fill"
+								/>
+							</ImgBtn>
+						</Link>
+					)}
 				</BtnContainerRight>
 			</Box>
 		</Container>
@@ -76,6 +98,7 @@ const BtnContainerRight = styled.div`
 `;
 
 const Title = styled.div`
+	cursor: pointer;
 	font-weight: 400;
 	font-size: x-large;
 `;

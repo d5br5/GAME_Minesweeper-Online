@@ -1,19 +1,28 @@
-import type { GetServerSideProps, NextPage } from "next";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import type { NextPage } from "next";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { authState } from "@shared/states";
+import { COLOR } from "@shared/constants";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
-import { COLOR } from "@shared/constants";
+import useMutation from "@libs/client/useMutation";
 
 interface HomeState {
 	ok: boolean;
 	cookie: string;
 }
 
-const Home: NextPage<HomeState> = ({ ok, cookie }) => {
-	const [auth, setAuth] = useRecoilState(authState);
+const Home: NextPage<HomeState> = () => {
+	const auth = useRecoilValue(authState);
 	const resetAuth = useResetRecoilState(authState);
+	const [logout, { loading }] = useMutation("/api/auth/logout");
+
+	const onLogout = () => {
+		if (loading) return;
+		resetAuth();
+		logout({});
+	};
+
 	return (
 		<Full>
 			<Container>
@@ -28,8 +37,10 @@ const Home: NextPage<HomeState> = ({ ok, cookie }) => {
 					<StartBtn>Game Start</StartBtn>
 				</Link>
 				<AuthContainer>
-					{auth.isLoggedIn ? (
-						<AuthLink onClick={() => resetAuth()}>Log out</AuthLink>
+					{auth.loading ? (
+						<AuthLink>Loading...</AuthLink>
+					) : auth.isLoggedIn ? (
+						<AuthLink onClick={onLogout}>Log out</AuthLink>
 					) : (
 						<>
 							<AuthLink>
@@ -116,17 +127,8 @@ export const AuthLink = styled.div`
 	text-decoration: underline;
 	font-size: small;
 	margin-top: -8px;
+	cursor: pointer;
 	color: ${COLOR.darkgray};
 `;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-	const cookie = ctx.req?.headers.cookie || "";
-	return {
-		props: {
-			ok: true,
-			cookie,
-		},
-	};
-};
 
 export default Home;

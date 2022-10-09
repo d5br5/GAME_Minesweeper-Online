@@ -1,14 +1,17 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AuthLink } from "pages";
 import { useSetRecoilState } from "recoil";
 import { authState } from "@shared/states";
 import { useRouter } from "next/router";
+import { COLOR } from "@shared/constants";
 import useMutation from "@libs/client/useMutation";
 import Layout from "@components/layout";
 import TextField from "@mui/material/TextField";
-import * as S from "@components/form/style";
 import Link from "next/link";
+import styled from "@emotion/styled";
+import * as S from "@components/form/style";
+import withGuest from "@components/auth/withGuest";
 
 interface LoginForm {
 	userId: string;
@@ -32,11 +35,16 @@ const Login = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setFocus,
+		setValue,
 	} = useForm<LoginForm>({ mode: "all" });
 	const router = useRouter();
 	const authHandler = useSetRecoilState(authState);
 
-	const [login, { loading, data }] = useMutation<LoginResponse>("/api/auth/login");
+	const [errorVisible, setErrorVisible] = useState(false);
+
+	const [login, { loading, data }] =
+		useMutation<LoginResponse>("/api/auth/login");
 
 	const onValid = (data: LoginForm) => {
 		login(data);
@@ -49,16 +57,23 @@ const Login = () => {
 				accessToken: data.data.accessToken,
 				isLoggedIn: true,
 				userId: data.data.userId,
+				loading: false,
 			});
 			router.replace("/game");
 		} else if (data?.ok === false) {
-			alert("login failed!");
+			setErrorVisible(true);
+			setValue("userId", "");
+			setValue("password", "");
+			setFocus("userId");
 		}
-	}, [data, authHandler, router]);
+	}, [data, authHandler, router, setFocus, setValue]);
 
 	return (
 		<Layout>
-			<S.Form onSubmit={handleSubmit(onValid)}>
+			<S.Form
+				onSubmit={handleSubmit(onValid)}
+				onChange={() => setErrorVisible(false)}
+			>
 				<S.Title>LOGIN</S.Title>
 				<TextField
 					size="small"
@@ -78,6 +93,7 @@ const Login = () => {
 						maxLength: 16,
 					})}
 				/>
+				{errorVisible && <Error>Error happened. Try again.</Error>}
 				<S.Submit type="submit">{loading ? "Loading..." : "LOGIN"}</S.Submit>
 				<AuthLink>
 					<Link href={"/join"}>Join</Link>
@@ -87,4 +103,10 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default withGuest(Login);
+
+const Error = styled.div`
+	width: 100%;
+	color: ${COLOR.up};
+	text-align: center;
+`;

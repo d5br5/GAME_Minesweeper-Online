@@ -1,11 +1,12 @@
 import { atom, DefaultValue } from "recoil";
 import { v1 } from "uuid";
 
-interface AuthState {
+export interface AuthState {
 	userId: string;
 	accessToken: string | null;
 	isLoggedIn: boolean;
 	accessExpiredAt: number | null;
+	loading: boolean;
 }
 
 const defaultState: AuthState = {
@@ -13,6 +14,7 @@ const defaultState: AuthState = {
 	accessToken: null,
 	isLoggedIn: false,
 	accessExpiredAt: null,
+	loading: false,
 };
 
 const dev = process.env.NODE_ENV !== "production";
@@ -22,19 +24,20 @@ const asyncUserAuthEffect =
 	() =>
 	({ setSelf, trigger }: any) => {
 		const fetchToken = async () => {
+			setSelf({ loading: true });
 			const response = await fetch(`${server}/api/token/init`)
 				.then((res) => res.json())
 				.catch((error) => console.log(error));
-			console.log(response);
 			if (response.ok) {
 				setSelf({
 					userId: response.user.userId,
 					accessToken: response.accessToken,
 					isLoggedIn: true,
 					accessExpiredAt: response.accessExpiredAt,
+					loading: false,
 				});
 			} else {
-				setSelf(new DefaultValue());
+				setSelf({ ...defaultState, loading: false });
 			}
 		};
 

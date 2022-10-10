@@ -55,7 +55,7 @@ export default async function handler(
 	const user = foundToken.user;
 
 	// token 만료기간 조회
-	let expired = Number(foundToken.expiredAt);
+	let expired = Number(foundToken.expiration);
 	let now = new Date().getTime();
 
 	// 만료 임박한 경우 재발급
@@ -68,11 +68,11 @@ export default async function handler(
 
 		// 새 token 생성 및 user 연결
 		const clientIp = getClientIp(req)!;
-		const [newToken, newExpiredAt] = createRefreshToken(user.userId, clientIp);
+		const [newToken, newExpiration] = createRefreshToken(user.userId, clientIp);
 		await client.refreshToken.create({
 			data: {
 				clientIp,
-				expiredAt: newExpiredAt,
+				expiration: newExpiration,
 				token: newToken,
 				user: { connect: { id: user.id } },
 			},

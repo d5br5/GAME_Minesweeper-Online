@@ -39,7 +39,7 @@ export default async function handler(
 				refreshToken: {
 					create: {
 						token: refreshToken,
-						expiredAt: refreshExpiredAt,
+						expiration: refreshExpiredAt,
 						clientIp,
 					},
 				},

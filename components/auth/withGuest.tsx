@@ -10,7 +10,7 @@ const withGuest = (Component: NextPage | React.FC) => {
 		const auth = useRecoilValue(authState);
 		useEffect(() => {
 			if (auth.isLoggedIn) {
-				router.replace("/game");
+				router.replace("/");
 			}
 		}, [router, auth]);
 		return <Component />;

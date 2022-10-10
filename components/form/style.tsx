@@ -78,3 +78,16 @@ export const Submit = styled.button`
 		color: ${COLOR.main};
 	}
 `;
+export const AuthContainer = styled.div`
+	display: flex;
+	gap: 25px;
+`;
+
+export const AuthLink = styled.div`
+	text-align: center;
+	text-decoration: underline;
+	font-size: small;
+	margin-top: -8px;
+	cursor: pointer;
+	color: ${COLOR.darkgray};
+`;

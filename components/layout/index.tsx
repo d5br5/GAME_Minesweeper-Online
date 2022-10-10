@@ -7,7 +7,7 @@ interface LayoutProps {
 	title?: string;
 }
 
-const Layout = ({ children, title = "MINE SWEEPER" }: LayoutProps) => {
+const Layout = ({ children, title = "Prism-Station" }: LayoutProps) => {
 	return (
 		<Container>
 			<Nav title={title} />

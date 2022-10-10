@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { AuthLink } from "pages";
 import { useSetRecoilState } from "recoil";
 import { authState } from "@shared/states";
 import { useRouter } from "next/router";
@@ -59,7 +58,7 @@ const Login = () => {
 				userId: data.data.userId,
 				loading: false,
 			});
-			router.replace("/game");
+			router.replace("/");
 		} else if (data?.ok === false) {
 			setErrorVisible(true);
 			setValue("userId", "");
@@ -95,9 +94,9 @@ const Login = () => {
 				/>
 				{errorVisible && <Error>Error happened. Try again.</Error>}
 				<S.Submit type="submit">{loading ? "Loading..." : "LOGIN"}</S.Submit>
-				<AuthLink>
+				<S.AuthLink>
 					<Link href={"/join"}>Join</Link>
-				</AuthLink>
+				</S.AuthLink>
 			</S.Form>
 		</Layout>
 	);

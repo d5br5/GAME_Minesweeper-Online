@@ -6,13 +6,11 @@ import Layout from "@components/layout";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import * as S from "@components/form/style";
-import { AuthLink } from "pages";
 import { useRouter } from "next/router";
 import withGuest from "@components/auth/withGuest";
 
 interface JoinForm {
 	userId: string;
-	nickname: string;
 	password: string;
 	passwordCheck: string;
 }
@@ -26,6 +24,7 @@ const Join = () => {
 		setError,
 		setValue,
 		setFocus,
+		clearErrors,
 		reset,
 	} = useForm<JoinForm>({ mode: "all" });
 	const router = useRouter();
@@ -44,6 +43,7 @@ const Join = () => {
 			return;
 		}
 		if (!isPasswordCheckOK()) {
+			setError("passwordCheck", { type: "equals" });
 			setFocus("passwordCheck");
 			return;
 		}
@@ -85,16 +85,13 @@ const Join = () => {
 		if (joinData && joinData?.ok) {
 			reset();
 			router.replace("/login");
-			alert("Welcome!");
+			alert("welcome!");
 		}
 	}, [router, joinData, reset]);
 
 	return (
 		<Layout>
-			<S.Form
-				onSubmit={handleSubmit(onValid)}
-				onChange={() => console.log(errors.passwordCheck)}
-			>
+			<S.Form onSubmit={handleSubmit(onValid)} onChange={() => clearErrors()}>
 				<S.Title>JOIN</S.Title>
 				<S.TextFieldContainer>
 					<S.FieldWithBtn>
@@ -132,12 +129,7 @@ const Join = () => {
 						)}
 					</div>
 				</S.TextFieldContainer>
-				<TextField
-					size="small"
-					type="text"
-					label="NICKNAME"
-					{...register("nickname", { required: true, minLength: 3 })}
-				/>
+
 				<S.TextFieldContainer>
 					<TextField
 						size="small"
@@ -165,6 +157,7 @@ const Join = () => {
 						size="small"
 						type="password"
 						label="PASSWORD-CHECK"
+						error={!!errors.passwordCheck}
 						{...register("passwordCheck", {
 							required: true,
 							minLength: 8,
@@ -181,9 +174,9 @@ const Join = () => {
 				</S.TextFieldContainer>
 
 				<S.Submit type="submit">{joinLoading ? "Loading..." : "JOIN"}</S.Submit>
-				<AuthLink>
+				<S.AuthLink>
 					<Link href={"/login"}>Login</Link>
-				</AuthLink>
+				</S.AuthLink>
 			</S.Form>
 		</Layout>
 	);

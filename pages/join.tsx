@@ -12,11 +12,9 @@ import withGuest from "@components/auth/withGuest";
 
 interface JoinForm {
 	userId: string;
+	nickname: string;
 	password: string;
 	passwordCheck: string;
-	name: string;
-	nickname: string;
-	email: string;
 }
 
 const Join = () => {
@@ -32,9 +30,6 @@ const Join = () => {
 	} = useForm<JoinForm>({ mode: "all" });
 	const router = useRouter();
 
-	const [emailChecked, setEmailChecked] = useState(false);
-	const [emailCheck, { loading: emailCheckLoading, data: emailCheckData }] =
-		useMutation("/api/auth/exist/email");
 	const [userIdChecked, setUserIdChecked] = useState(false);
 	const [userIdCheck, { loading: userIdCheckLoading, data: userIdCheckData }] =
 		useMutation("/api/auth/exist/userId");
@@ -48,10 +43,6 @@ const Join = () => {
 			alert("Please check ID first :)");
 			return;
 		}
-		if (!emailChecked) {
-			alert("Please check email first :)");
-			return;
-		}
 		if (!isPasswordCheckOK()) {
 			setFocus("passwordCheck");
 			return;
@@ -63,7 +54,6 @@ const Join = () => {
 	const watchID = watch("userId");
 	const watchPW = watch("password");
 	const watchPWCheck = watch("passwordCheck");
-	const watchEmail = watch("email");
 
 	const isPasswordOK = () => {
 		return (
@@ -83,12 +73,6 @@ const Join = () => {
 		userIdCheck({ userId: watchID });
 	};
 
-	const onEmailCheck = () => {
-		if (emailChecked || emailCheckLoading) return;
-		if (!watchEmail || errors.email) return;
-		emailCheck({ email: watchEmail });
-	};
-
 	useEffect(() => {
 		if (userIdCheckData?.ok) setUserIdChecked(true);
 		if (userIdCheckData?.ok === false) {
@@ -96,14 +80,6 @@ const Join = () => {
 			setError("userId", { type: "usage", message: "ID is already in use" });
 		}
 	}, [userIdCheckData, setError]);
-
-	useEffect(() => {
-		if (emailCheckData?.ok) setEmailChecked(true);
-		if (emailCheckData?.ok === false) {
-			setEmailChecked(false);
-			setError("email", { type: "usage", message: "Email is already in use" });
-		}
-	}, [emailCheckData, setError]);
 
 	useEffect(() => {
 		if (joinData && joinData?.ok) {
@@ -156,6 +132,12 @@ const Join = () => {
 						)}
 					</div>
 				</S.TextFieldContainer>
+				<TextField
+					size="small"
+					type="text"
+					label="NICKNAME"
+					{...register("nickname", { required: true, minLength: 3 })}
+				/>
 				<S.TextFieldContainer>
 					<TextField
 						size="small"
@@ -198,58 +180,6 @@ const Join = () => {
 					</div> */}
 				</S.TextFieldContainer>
 
-				<S.TextFieldContainer>
-					<S.FieldWithBtn>
-						<S.FieldBox>
-							<TextField
-								type="email"
-								size="small"
-								label="EMAIL"
-								{...register("email", {
-									required: true,
-									pattern: PATTERN.email,
-								})}
-								error={!!errors.email}
-								onChange={(data: any) => {
-									if (emailChecked) setEmailChecked(false);
-									setValue("email", data.target.value);
-								}}
-							/>
-						</S.FieldBox>
-						<S.CheckBtn onClick={onEmailCheck} checked={emailChecked}>
-							{emailCheckLoading
-								? "loading.."
-								: emailChecked
-								? "✔ checked"
-								: "check"}
-						</S.CheckBtn>
-					</S.FieldWithBtn>
-					<div>
-						<S.InputGuide fullfilled={PATTERN.email.test(watchEmail)}>
-							✓ Valid format of email
-						</S.InputGuide>
-						{errors.email?.type === "usage" ? (
-							<S.InputGuide banned>✓ Already in use</S.InputGuide>
-						) : (
-							<S.InputGuide fullfilled={emailChecked}>
-								✓ Not in use (click &quot;check&quot;)
-							</S.InputGuide>
-						)}
-					</div>
-				</S.TextFieldContainer>
-				<TextField
-					size="small"
-					type="text"
-					label="NAME"
-					{...register("name", { required: true, minLength: 2 })}
-				/>
-
-				<TextField
-					size="small"
-					type="text"
-					label="NICKNAME"
-					{...register("nickname", { required: true, minLength: 3 })}
-				/>
 				<S.Submit type="submit">{joinLoading ? "Loading..." : "JOIN"}</S.Submit>
 				<AuthLink>
 					<Link href={"/login"}>Login</Link>

@@ -1,4 +1,4 @@
-import { authState } from "@shared/states";
+import { authState } from "@shared/authState";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { authState } from "@shared/states";
+import { authState } from "@shared/authState";
 import Image from "next/image";
 import Link from "next/link";
 import { useRecoilValue } from "recoil";

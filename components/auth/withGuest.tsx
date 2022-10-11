@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { authState } from "@shared/states";
+import { authState } from "@shared/authState";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";

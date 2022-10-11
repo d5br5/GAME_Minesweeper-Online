@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { authState } from "@shared/states";
+import { authState } from "@shared/authState";
 import Layout from "@components/layout";
 import { getUsername } from "@libs/client/getUsername";
 

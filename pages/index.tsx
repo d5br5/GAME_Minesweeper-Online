@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import Map from "@components/map/controller";
+import Map from "@components/map";
 import Profile from "@components/map/profile";
 
 interface HomeState {

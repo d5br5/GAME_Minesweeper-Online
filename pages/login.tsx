@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { authState } from "@shared/states";
+import { authState } from "@shared/authState";
 import { useRouter } from "next/router";
 import { COLOR } from "@shared/constants";
 import useMutation from "@libs/client/useMutation";
@@ -42,8 +42,7 @@ const Login = () => {
 
 	const [errorVisible, setErrorVisible] = useState(false);
 
-	const [login, { loading, data }] =
-		useMutation<LoginResponse>("/api/auth/login");
+	const [login, { loading, data }] = useMutation<LoginResponse>("/api/auth/login");
 
 	const onValid = (data: LoginForm) => {
 		login(data);
@@ -69,10 +68,7 @@ const Login = () => {
 
 	return (
 		<Layout>
-			<S.Form
-				onSubmit={handleSubmit(onValid)}
-				onChange={() => setErrorVisible(false)}
-			>
+			<S.Form onSubmit={handleSubmit(onValid)} onChange={() => setErrorVisible(false)}>
 				<S.Title>LOGIN</S.Title>
 				<TextField
 					size="small"
@@ -92,7 +88,7 @@ const Login = () => {
 						maxLength: 16,
 					})}
 				/>
-				{errorVisible && <Error>Error happened. Try again.</Error>}
+				{errorVisible && <Error>Wrong ID or PW. Try again.</Error>}
 				<S.Submit type="submit">{loading ? "Loading..." : "LOGIN"}</S.Submit>
 				<S.AuthLink>
 					<Link href={"/join"}>Join</Link>

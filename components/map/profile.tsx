@@ -1,16 +1,20 @@
 import styled from "@emotion/styled";
-import { Avatar, Collapse } from "@mui/material";
+import { Avatar, Collapse, Switch } from "@mui/material";
 import { COLOR } from "@shared/constants";
-import { authState } from "@shared/states";
+import { authState } from "@shared/authState";
 import { useState } from "react";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import * as S from "@components/form/style";
 import useMutation from "@libs/client/useMutation";
 import Link from "next/link";
+import { filterState } from "@shared/filterState";
 
 const Profile = () => {
 	const auth = useRecoilValue(authState);
 	const resetAuth = useResetRecoilState(authState);
+
+	const [filter, setFilter] = useRecoilState(filterState);
+
 	const [logout, { loading }] = useMutation("/api/auth/logout");
 	const [checked, setChecked] = useState(false);
 
@@ -32,19 +36,47 @@ const Profile = () => {
 			<Collapse in={checked}>
 				<ProfileDetail>
 					{auth.isLoggedIn ? (
-						<div>
+						<ProfileFlexContainer>
 							<div>{auth.userId}님</div>
 							<Button onClick={onLogout}>Log out</Button>
-						</div>
+							<Link href={"/support"}>
+								<S.AuthLink>support</S.AuthLink>
+							</Link>
+						</ProfileFlexContainer>
 					) : (
 						<div>
 							<div>Guest</div>
 							<Link href={"/login"}>
 								<Button>Log in</Button>
 							</Link>
+							<Link href={"/support"}>
+								<S.AuthLink>support</S.AuthLink>
+							</Link>
 						</div>
 					)}
 				</ProfileDetail>
+				{auth.isLoggedIn && (
+					<ProfileDetail>
+						<FilterContainer>
+							<span id="filter-title">Filter</span>
+							<div>
+								<div>찜한 사진관</div>
+								<Switch
+									checked={filter.liked}
+									onClick={() => setFilter((prev) => ({ ...prev, liked: !prev.liked }))}
+								/>
+							</div>
+							{/* <div>
+							<div>스튜디오형</div>
+							<Switch checked={filter.liked} />
+						</div>
+						<div>
+							<div>자판기형</div>
+							<Switch checked={filter.liked} />
+						</div> */}
+						</FilterContainer>
+					</ProfileDetail>
+				)}
 			</Collapse>
 		</Container>
 	);
@@ -71,8 +103,9 @@ const ProfileDetail = styled.div`
 	width: 200px;
 	padding: 10px;
 	background-color: white;
-	border: 1px solid black;
+	border: 2px solid ${COLOR.black};
 	border-radius: 6px;
+	margin-bottom: 10px;
 `;
 
 const Button = styled(S.Submit)`
@@ -81,6 +114,36 @@ const Button = styled(S.Submit)`
 	width: 100px;
 	padding: 3px;
 	margin-top: 10px;
+	margin-bottom: 13px;
+`;
+
+const ProfileFlexContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
+
+const FilterContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+
+	#filter-title {
+		margin-top: 5px;
+		border: 1px ${COLOR.main} solid;
+		padding: 3px 10px;
+		font-size: 14px;
+		border-radius: 5px;
+		color: ${COLOR.main};
+	}
+	div {
+		padding-left: 10px;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
 `;
 
 export default Profile;

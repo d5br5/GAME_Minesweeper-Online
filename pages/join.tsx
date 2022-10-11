@@ -129,7 +129,6 @@ const Join = () => {
 						)}
 					</div>
 				</S.TextFieldContainer>
-
 				<S.TextFieldContainer>
 					<TextField
 						size="small"

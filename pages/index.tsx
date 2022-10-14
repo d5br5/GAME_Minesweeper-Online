@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Map from "@components/map";
-import Profile from "@components/map/profile";
+import Profile from "@components/profile";
 
 interface HomeState {
 	ok: boolean;

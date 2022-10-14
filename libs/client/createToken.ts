@@ -4,14 +4,13 @@ import { sign, SignOptions } from "jsonwebtoken";
 const REFRESH_TOKEN_SECRET_KEY = process.env.REFRESH_TOKEN_SECRET_KEY!;
 const ACCESS_TOKEN_SECRET_KEY = process.env.ACCESS_TOKEN_SECRET_KEY!;
 
-export const createAccessToken = (userId: string): [string, number] => {
+export const createAccessToken = (userId: string): string => {
 	const accessTokenPayload = {
 		userId,
 		auth: "user",
 	};
 
 	const duration = TOKEN_AGE_SEC.access * 1000;
-	const expiredAt = new Date().getTime() + duration;
 
 	const accessTokenOption: SignOptions = {
 		subject: "minesweeper access token",
@@ -19,12 +18,19 @@ export const createAccessToken = (userId: string): [string, number] => {
 		issuer: "d5br5",
 	};
 
-	const accessToken = sign(accessTokenPayload, ACCESS_TOKEN_SECRET_KEY, accessTokenOption);
+	const accessToken = sign(
+		accessTokenPayload,
+		ACCESS_TOKEN_SECRET_KEY,
+		accessTokenOption
+	);
 
-	return [accessToken, expiredAt];
+	return accessToken;
 };
 
-export const createRefreshToken = (userId: string, clientIp: string): [string, number] => {
+export const createRefreshToken = (
+	userId: string,
+	clientIp: string
+): [string, number] => {
 	const refreshTokenPayload = {
 		userId,
 		auth: "user",
@@ -40,7 +46,11 @@ export const createRefreshToken = (userId: string, clientIp: string): [string, n
 		issuer: "d5br5",
 	};
 
-	const refreshToken = sign(refreshTokenPayload, REFRESH_TOKEN_SECRET_KEY, refreshTokenOption);
+	const refreshToken = sign(
+		refreshTokenPayload,
+		REFRESH_TOKEN_SECRET_KEY,
+		refreshTokenOption
+	);
 
 	return [refreshToken, expiredAt];
 };

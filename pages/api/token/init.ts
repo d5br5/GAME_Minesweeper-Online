@@ -85,8 +85,8 @@ export default async function handler(
 	}
 
 	// access token 발급
-	const [accessToken, accessExpiredAt] = createAccessToken(user.userId);
+	const accessToken = createAccessToken(user.userId);
 
 	// user정보, access token 전달
-	res.status(200).json({ ok: true, user, accessToken, accessExpiredAt });
+	res.status(200).json({ ok: true, user, accessToken });
 }

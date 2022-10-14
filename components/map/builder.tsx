@@ -5,10 +5,16 @@ import { NextPage } from "next";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { ShopWithFavs } from ".";
+import useMutation from "@libs/client/useMutation";
+
 const { naver } = global;
 
-const Builder: NextPage<{ shops: ShopWithFavs[] }> = ({ shops }) => {
+const Builder: NextPage<{
+	shops: ShopWithFavs[];
+}> = ({ shops }) => {
 	const auth = useRecoilValue(authState);
+	const [toggleFav, { loading }] = useMutation("/api/shop/fav");
+
 	useEffect(() => {
 		const container = document.getElementById("map") || "";
 		const options = {
@@ -23,13 +29,7 @@ const Builder: NextPage<{ shops: ShopWithFavs[] }> = ({ shops }) => {
 		const map = new naver.maps.Map(container, options);
 		for (let shop of shops) {
 			let content = document.createElement("div");
-			content.style["padding"] = "20px";
-			content.style["display"] = "flex";
-			content.style["flexDirection"] = "column";
-			content.style["alignItems"] = "center";
-			content.style["position"] = "relative";
-			content.style["gap"] = "10px";
-
+			content.classList.add("pickerContent");
 			content.innerHTML += `
 				<div
 					style="text-align:center;
@@ -42,47 +42,34 @@ const Builder: NextPage<{ shops: ShopWithFavs[] }> = ({ shops }) => {
 				<div>contact : ${shop.contact}</div>
 				<a href="${shop.url}" target="_blank">
 					<div
-						style="padding: 1px 10px; border: 1px solid ${COLOR.up}; color: ${COLOR.up}; border-radius: 5px; margin-top:10px; font-size: 13px; font-weight:700; line-height:20px;">more</div>
+						style="padding: 1px 10px; border: 1px solid ${COLOR.up}; color: ${COLOR.up}; border-radius: 5px; margin-top:10px; font-size: 13px; font-weight:700; line-height:20px;">예약하기</div>
 				</a>
 			`;
 
 			let heart = document.createElement("div");
-			heart.style["border"] = "1px solid black";
-			heart.style["borderRadius"] = "50%";
-			heart.style["width"] = "25px";
-			heart.style["height"] = "25px";
-			heart.style["textAlign"] = "center";
-			heart.style["position"] = "absolute";
-			heart.style["top"] = "17px";
-			heart.style["right"] = "17px";
-			heart.style["fontWeight"] = "900";
-			heart.style["lineHeight"] = "24px";
-			heart.style["cursor"] = "pointer";
-			heart.style["padding"] = "2px";
-			heart.style["transition"] = "all ease 0.3s";
+			heart.classList.add("heart");
+			heart.id = `heart${shop.id}`;
+
 			heart.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`;
 
 			if (auth.isLoggedIn) {
-				let clicked = shop.favs.filter((a) => a.user.userId === auth.userId).length > 0;
-				if (clicked) {
-					heart.style["color"] = COLOR.white;
-					heart.style["border"] = `1px solid ${COLOR.main}`;
-					heart.style["backgroundColor"] = COLOR.main;
-				}
+				let clicked =
+					shop.favs.filter((a) => a.user.userId === auth.userId).length > 0;
+				if (clicked) heart.classList.add("liked");
+
 				heart.addEventListener("click", () => {
-					if (clicked) {
-						heart.style["color"] = COLOR.black;
-						heart.style["border"] = "1px solid black";
-						heart.style["backgroundColor"] = "white";
+					if (loading) return;
+					if (heart.classList.contains("liked")) {
+						heart.classList.remove("liked");
 					} else {
-						heart.style["color"] = COLOR.white;
-						heart.style["border"] = `1px solid ${COLOR.main}`;
-						heart.style["backgroundColor"] = COLOR.main;
+						heart.classList.add("liked");
 					}
-					clicked = !clicked;
+					toggleFav({ shopId: shop.id, accessToken: auth.accessToken });
 				});
 			} else {
-				heart.addEventListener("click", () => alert("찜하기는 로그인 후 이용 가능합니다. "));
+				heart.addEventListener("click", () =>
+					alert("찜하기는 로그인 후 이용 가능합니다. ")
+				);
 			}
 			content.appendChild(heart);
 

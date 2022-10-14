@@ -15,7 +15,7 @@ export interface ShopWithFavs extends Shop {
 	favs: FavWithUsers[];
 }
 
-interface ShopResponse {
+export interface ShopResponse {
 	ok: boolean;
 	shops: ShopWithFavs[];
 }
@@ -30,7 +30,9 @@ const Map: NextPage = () => {
 			shops={
 				auth.isLoggedIn && filter.liked
 					? data?.shops.filter(
-							(shop) => shop.favs.filter((a) => a.user.userId === auth.userId).length > 0
+							(shop) =>
+								shop.favs.filter((a) => a.user.userId === auth.userId).length >
+								0
 					  ) || []
 					: data?.shops || []
 			}

@@ -5,7 +5,6 @@ export interface AuthState {
 	userId: string;
 	accessToken: string | null;
 	isLoggedIn: boolean;
-	accessExpiredAt: number | null;
 	loading: boolean;
 }
 
@@ -13,12 +12,13 @@ const defaultState: AuthState = {
 	userId: "",
 	accessToken: null,
 	isLoggedIn: false,
-	accessExpiredAt: null,
 	loading: false,
 };
 
 const dev = process.env.NODE_ENV !== "production";
-const server = dev ? "http://localhost:3000" : "https://minesweeper-tan.vercel.app/";
+const server = dev
+	? "http://localhost:3000"
+	: "https://minesweeper-tan.vercel.app/";
 
 const asyncUserAuthEffect =
 	() =>
@@ -33,7 +33,6 @@ const asyncUserAuthEffect =
 					userId: response.user.userId,
 					accessToken: response.accessToken,
 					isLoggedIn: true,
-					accessExpiredAt: response.accessExpiredAt,
 					loading: false,
 				});
 			} else {

@@ -50,6 +50,14 @@ div.liked {
 	background-color: #00ced1;
 }
 
+.map-brand-title {
+	border: 1px solid black;
+	padding: 3px 8px;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
 @media (prefers-color-scheme: dark) {
 	html {
 		color-scheme: dark;

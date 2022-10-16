@@ -33,16 +33,27 @@ const Builder: NextPage<{
 			content.innerHTML += `
 				<div
 					style="text-align:center;
-					font-size: 18px;
+					font-size: 16px;
 					font-weight:700;
 					margin-bottom: 10px">
-					${shop.name}
+					${
+						shop.brand !== ""
+							? `<div class="map-brand-title">${shop.brand}</div> ${shop.name}점`
+							: shop.name
+					}
+					
+				</div>
+				<div style="flex;">
+					${shop.studio ? "<div>스튜디오형</div>" : ""}
+					${shop.booth ? "<div>부스형</div>" : ""}
 				</div>
 				<div>주소 : 서울시 강남구 효창동</div>
-				<div>contact : ${shop.contact}</div>
+				<div>연락처 : ${shop.contact}</div>
 				<a href="${shop.url}" target="_blank">
 					<div
-						style="padding: 1px 10px; border: 1px solid ${COLOR.up}; color: ${COLOR.up}; border-radius: 5px; margin-top:10px; font-size: 13px; font-weight:700; line-height:20px;">예약하기</div>
+						style="padding: 1px 10px; border: 1px solid ${COLOR.up}; color: ${
+				COLOR.up
+			}; border-radius: 5px; margin-top:10px; font-size: 13px; font-weight:700; line-height:20px;">예약하기</div>
 				</a>
 			`;
 

@@ -26,9 +26,13 @@ model User {
 
 model Shop {
   id      Int    @id @default(autoincrement())
+  brand String
   name    String
   contact String
+  address String
   url     String
+  studio Boolean
+  booth Boolean
   lat     Float
   lng     Float
   favs    Fav[]
@@ -38,9 +42,9 @@ model Fav {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  shop      Shop     @relation(fields: [shopId], references: [id])
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
   shopId    Int
 
   @@index([userId])
@@ -50,11 +54,11 @@ model Voice {
   id         Int           @id @default(autoincrement())
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
-  user       User          @relation(fields: [userId], references: [id])
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
-  category   VoiceCategory @relation(fields: [categoryId], references: [id])
+  category   VoiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId Int
-  status     VoiceStatus   @relation(fields: [statusId], references: [id])
+  status     VoiceStatus   @relation(fields: [statusId], references: [id], onDelete: Cascade)
   statusId   Int
 }
 
@@ -73,7 +77,7 @@ model VoiceStatus {
 model RefreshToken {
   id         Int    @id @default(autoincrement())
   token      String @db.LongText
-  user       User   @relation(fields: [userId], references: [id])
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   expiration BigInt
   clientIp   String

@@ -42,7 +42,8 @@ const Login = () => {
 
 	const [errorVisible, setErrorVisible] = useState(false);
 
-	const [login, { loading, data }] = useMutation<LoginResponse>("/api/auth/login");
+	const [login, { loading, data }] =
+		useMutation<LoginResponse>("/api/auth/login");
 
 	const onValid = (data: LoginForm) => {
 		login(data);
@@ -51,7 +52,6 @@ const Login = () => {
 	useEffect(() => {
 		if (data && data?.ok === true) {
 			authHandler({
-				accessExpiredAt: data.data.accessExpiredAt,
 				accessToken: data.data.accessToken,
 				isLoggedIn: true,
 				userId: data.data.userId,
@@ -68,7 +68,10 @@ const Login = () => {
 
 	return (
 		<Layout>
-			<S.Form onSubmit={handleSubmit(onValid)} onChange={() => setErrorVisible(false)}>
+			<S.Form
+				onSubmit={handleSubmit(onValid)}
+				onChange={() => setErrorVisible(false)}
+			>
 				<S.Title>LOGIN</S.Title>
 				<TextField
 					size="small"

@@ -54,6 +54,7 @@ model Voice {
   id         Int           @id @default(autoincrement())
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
+  voice String @db.LongText
   user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   category   VoiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)

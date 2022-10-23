@@ -10,6 +10,7 @@ export const COLOR = {
 	main: "#00CED1",
 	confirm: "#0fba15",
 	background: "#ffffff",
+	purple: "#8B00FF",
 };
 
 export const PATTERN = {

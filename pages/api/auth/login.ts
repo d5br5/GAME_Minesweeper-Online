@@ -28,7 +28,7 @@ export default async function handler(
 
 	if (ok) {
 		const clientIp = getClientIp(req)!;
-		const [accessToken, accessExpiredAt] = createAccessToken(userId);
+		const accessToken = createAccessToken(userId);
 		const [refreshToken, refreshExpiredAt] = createRefreshToken(
 			userId,
 			clientIp
@@ -58,7 +58,6 @@ export default async function handler(
 				accessToken,
 				refreshToken,
 				userId,
-				accessExpiredAt,
 				refreshExpiredAt,
 			},
 		});

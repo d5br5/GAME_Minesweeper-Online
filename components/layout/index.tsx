@@ -18,7 +18,7 @@ const Layout = ({ children, title = "Prism-Station" }: LayoutProps) => {
 
 const Children = styled.div`
 	margin: 0 auto;
-	max-width: 800px;
+	max-width: 600px;
 	width: 100%;
 `;
 

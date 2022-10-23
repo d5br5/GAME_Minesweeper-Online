@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<RecoilRoot>
 			<SWRConfig value={{ fetcher }}>
 				<Head>
-					<title>Prism:Cube</title>
+					<title>Prism:Station</title>
 				</Head>
 				<Component {...pageProps} />
 			</SWRConfig>

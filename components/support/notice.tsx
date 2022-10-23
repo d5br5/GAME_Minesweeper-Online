@@ -6,7 +6,7 @@ const Notice = () => {
 		<Container>
 			<Title>Notice</Title>
 			<Desc>
-				<Strong>Prism:Cube</Strong>를 이용해주셔서 감사합니다. <br />
+				<Strong>Prism:Station</Strong>을 이용해주셔서 감사합니다. <br />
 				전국 셀프스튜디오 중 서울 지역과, <br />
 				점포 40개 미만 프랜차이즈 부스 정보만 제공됩니다. <br />
 				빠른 시일 내에 추가하도록 하겠습니다. <br />

@@ -58,6 +58,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 					select: { userId: true },
 				},
 			},
+			orderBy: {
+				createdAt: "desc",
+			},
 		});
 		res.json({ ok: true, voices });
 	}

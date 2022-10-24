@@ -4,6 +4,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@m
 import { authState } from "@shared/authState";
 import { COLOR } from "@shared/constants";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilValue } from "recoil";
@@ -15,6 +16,7 @@ interface VoiceForm {
 
 const Text = () => {
 	const auth = useRecoilValue(authState);
+	const router = useRouter();
 	const { register, handleSubmit, reset } = useForm<VoiceForm>();
 
 	const [createVoice, { data, loading }] = useMutation("api/support/voice");
@@ -26,6 +28,7 @@ const Text = () => {
 			category: Number(data.category) || 1,
 			token: auth.accessToken,
 		});
+		router.reload();
 	};
 
 	useEffect(() => {
@@ -71,6 +74,7 @@ const Text = () => {
 				id="outlined-textarea"
 				disabled={!auth.isLoggedIn}
 				multiline
+				maxRows={5}
 				{...register("desc", { required: true })}
 			/>
 		</Form>

@@ -16,9 +16,7 @@ const defaultState: AuthState = {
 };
 
 const dev = process.env.NODE_ENV !== "production";
-const server = dev
-	? "http://localhost:3000"
-	: "https://minesweeper-tan.vercel.app/";
+const server = dev ? "http://localhost:3000" : "https://prism-station.vercel.app/";
 
 const asyncUserAuthEffect =
 	() =>

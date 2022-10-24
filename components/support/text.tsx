@@ -1,13 +1,6 @@
 import styled from "@emotion/styled";
 import useMutation from "@libs/client/useMutation";
-import {
-	Button,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	TextField,
-} from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { authState } from "@shared/authState";
 import { COLOR } from "@shared/constants";
 import Link from "next/link";
@@ -77,6 +70,7 @@ const Text = () => {
 			<TextField
 				id="outlined-textarea"
 				disabled={!auth.isLoggedIn}
+				multiline
 				{...register("desc", { required: true })}
 			/>
 		</Form>

@@ -42,26 +42,34 @@
     - 불러온 shop들의 좌표들 각각에 대응되는 마커 설정
         - 마커 클릭시 shop의 세부 정보 표시(연락처, 가격, 주소 등)
         - 마커 클릭수 집계를 위해 firebase DB내 mapMarketCount 변수 increment event 추가
-- 필터링 (v1에서 구현, v2에서 개선중)
-    - MUI의 슬라이더, 체크박스 사용
-    - 적용 버튼 클릭시, 아래 조건들에 해당하는 shop들을 filtering하여 filteredShop 배열에 저장
-    - 조건
-        - 기준 가격, 네이버 평점 - slider 활용
-            - slider 값은 상태변수로 저장.
-        - 지역구 - check box 활용
-            - check 클릭된 box는 아래와 같이 select
-            
-            ```jsx
-            const query = 'input[name="local"]:checked';
-            ```
-            
-- Data Loading
-    - 최초 1회 로딩
-    - 이후 필요한 곳에 가공하여 props 전달
-- 채널톡
+- 회원가입, 로그인
+    - ID와 PW만으로 진행
+    - 관심 업체 찜하기, 건의 게시글 작성 가능
+- 찜하기 : 관심 업체 찜한 후 필터링 제공
+- Data Loading : 최초 1회 로딩. 이후 필요한 곳에 가공하여 props 전달
+- 건의 게시판
     - 고객의 소리를 듣기 위한 소통 창구 마련
     - 서비스 이용자들뿐만 아니라 스튜디오 소유자분들이 본인 업체도 넣어달라고 연락을 취하심
-    - v2에서 제거. 건의 게시판 직접 구현
+- Private Router
+    - withUser로 컴포넌트를 감싸고, 그 안에서 auth check해서 router.replace 할 생각이었음
+    - 살짝 맛보기 보여주는 것 없었으면 좋겠음 → toBe
+    
+        ```tsx
+        const withUser = (Component: NextPage | React.FC) => {
+            const User = () => {
+                const router = useRouter();
+                const auth = useRecoilValue(authState);
+                useEffect(() => {
+                    if (!auth.isLoggedIn) {
+                        router.replace("/login");
+                    }
+                }, [router, auth]);
+                return <Component />;
+            };
+            return User;
+        };
+        ```
+            
 
 ### Back-end
 
@@ -84,7 +92,29 @@
     reviewNum : "23"
     website : "https://www.ootmode.com"
     ```
-    
+- 세션 vs 토큰
+    - 둘다 사용? → 토큰 쓰자!
+    - 받은 토큰은 ls에 절대 넣지 말 것 (XSS 방지) → 쿠키에 저장해도 XSS 위험
+    - HTTP only cookie에 저장 →  CSRF 위험
+    - SAMESITE cookie?
+    - XSS, CSRF 공격
+    - 저장위치
+        - access token : local variable → recoil
+        - refresh token : DB, cookie → IP 저장
+- 로그인 과정
+    - refresh token 발급 → DB저장, cookie 저장
+    - access token 발급 → recoil 저장
+- 새로고침시 권한조회
+    - 쿠키에 refresh token이 있는가
+        - 없으면 recoil auth 초기화
+        - cookie 초기화
+    - 쿠키에 refresh token이 있다면
+        - 내가 서명해준 토큰이 맞는가 → verify with secret key
+        - 서명이 위조된거라면 → recoil auth 초기화, cookie 초기화
+    - 올바른 refresh이라면
+        - db에서 refresh token 찾아서 해당 유저 find
+        - 현재 IP와 refresh token에 저장된 IP가 일치하는지 비교
+        - recoil auth setting → access token, expiredAt 
 
 ### 겪은 문제
 
@@ -92,6 +122,53 @@
     - kakao map api 사용했을 때 문제
     - info string 내부의 ` ` 속 a 태그에 href 시 절대주소로 인식 안하고 상대주소로 인식함
     - 중괄호 ({ }) 안쓰고 바깥으로 추출하여 해결 (일반 문자열로 인식)
+
+- Filter
+    - filter 값 처리하면, 기존 핀이 사라지지 않음
+    - paint map logic과 paint pic logic을 한 effect안으로 묶었음. \
+- Expectation Violation: Duplicate atom key.
+    - This is a FATAL ERROR in production. But it is safe to ignore this warning if it occurred because of hot module replacement.
+    - 라우트 재방문시마다 atom이 재선언되어 key값이 겹친다는 오류
+        - 아래와 같이 key값 뒤에 난수 부여함으로써 해결
+        
+        ```
+        import { v1 } from "uuid";
+        key: `authState/${v1()}`
+        ```
+        
+- recoil persist
+    - 목적
+        - 새로고침시 url을 fetch하여 recoil 초기값 자동 세팅
+    - 시도
+        1. useUser를 page마다 상단에 삽입하여 data fetch를 useEffect로 수행
+            - 모든 페이지에 삽입했기 때문에 페이지 이동할때마다 fetch수행 : 비효율
+        2. 조건부 hook 시도
+            - atom이 있다면 fetch하지 않고, 없다면 cookie 의 token 을 조회하려 했음
+            - flux 원칙에 따라 조건절에 hook을 사용할 수는 없었음
+        3. _app.tsx에서 useEffect 실행
+            - return 문 이전에 fetch Effect 실행
+            - 하지만  Rocoil, SWR Root가 return 문 이후에 있어 fetch 정보를 저장 불가
+        4. _app.tsx return문 Rocoil, SWR Root 내 custom comp를 Comp와 병렬 배치
+            - 병렬 배치되므로 custom comp의 fetch 정보가 더 늦게 반영됨 (순서보장안됨)
+        5. Custom Component의 자식으로 Component 재배치
+            - 이것도 똑같음. fetch는 되나 자동반영되지 않음 (실시간 확인 불가)
+        6. middleware?
+            - 이것도 근본적인 해결책은 아님. 동일 로직 항상 시행.
+            - atom 값을 전달, 수정할수 없음
+        7. finally….. atom state 선언시 effects로 비동기 fetch함수 전달! 공식문서 짱..
+            - 하지만 next 내부 api 를 요청할 수 없었음
+            - Only absolute URLs are supported
+            - 아래 코드처럼 실행환경당 서버를 구분하여 해결
+            
+            ```
+            const dev = process.env.NODE_ENV !== "production";
+            const server = dev ? "http://localhost:3000" : "http://localhost:3000";
+            ```
+            
+        8. 새로고침하면 쿠키가 사라짐
+            - `path=/` 설정하여 해결
+            - 근데 로그인시 api/token 을 거치면 cookie가 나타남
+            - 사용하고자 할 route의 root에 지정해줘야 하는 것 같음.
 
 ### 아쉬운 점
 

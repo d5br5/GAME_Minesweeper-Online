@@ -8,7 +8,7 @@ const Support = () => {
 		<Layout>
 			<Notice />
 			<Text />
-			<Article />
+			{/* <Article /> */}
 		</Layout>
 	);
 };

@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+    "@emotion/types": "^0.7.0",
     "@mui/material": "^5.10.5",
     "@prisma/client": "^4.3.1",
     "@types/navermaps": "^3.0.17",

@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import { filterState } from "@shared/filterState";
 import { authState } from "@shared/authState";
 import { useEffect, useState } from "react";
+import Loading from "./loading";
 
 interface FavWithUsers extends Fav {
 	user: { userId: string };
@@ -24,19 +25,27 @@ const Map: NextPage = () => {
 	const { data } = useSWR<ShopResponse>("/api/shop/list");
 	const filter = useRecoilValue(filterState);
 	const auth = useRecoilValue(authState);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		if (data && data.ok) setIsLoading(false);
+	}, [data]);
 
 	return (
-		<Builder
-			shops={
-				auth.isLoggedIn && filter.liked
-					? data?.shops.filter(
-							(shop) =>
-								shop.favs.filter((a) => a.user.userId === auth.userId).length >
-								0
-					  ) || []
-					: data?.shops || []
-			}
-		/>
+		<>
+			{isLoading && <Loading />}
+			<Builder
+				shops={
+					auth.isLoggedIn && filter.liked
+						? data?.shops.filter(
+								(shop) =>
+									shop.favs.filter((a) => a.user.userId === auth.userId)
+										.length > 0
+						  ) || []
+						: data?.shops || []
+				}
+			/>
+		</>
 	);
 };
 

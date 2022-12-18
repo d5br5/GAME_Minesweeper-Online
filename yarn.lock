@@ -304,6 +304,11 @@
     "@emotion/use-insertion-effect-with-fallbacks" "^1.0.0"
     "@emotion/utils" "^1.2.0"
 
+"@emotion/types@^0.7.0":
+  "integrity" "sha512-hElIlit2hOhKye6WheMYPLmCwbDoqXDmy/dGUgBjtfqPbQGu0nbCRtCidKKQUGRZOlnE5A+wnyJwpCkb9XNkfQ=="
+  "resolved" "https://registry.npmjs.org/@emotion/types/-/types-0.7.0.tgz"
+  "version" "0.7.0"
+
 "@emotion/unitless@^0.8.0":
   "integrity" "sha512-VINS5vEYAscRl2ZUDiT3uMPlrFQupiKgHz5AA4bCH1miKBg4qtwkim1qPmJj/4WG6TreYMY111rEFsjupcOKHw=="
   "resolved" "https://registry.npmjs.org/@emotion/unitless/-/unitless-0.8.0.tgz"

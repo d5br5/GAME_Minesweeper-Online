@@ -1,6 +1,13 @@
 import styled from "@emotion/styled";
 import useMutation from "@libs/client/useMutation";
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import {
+	Button,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+} from "@mui/material";
 import { authState } from "@shared/authState";
 import { COLOR } from "@shared/constants";
 import Link from "next/link";
@@ -28,7 +35,7 @@ const Text = () => {
 			category: Number(data.category) || 1,
 			token: auth.accessToken,
 		});
-		router.reload();
+		alert("문의가 등록되었습니다. 확인 후 반영하도록 하겠습니다. 감사합니다. ");
 	};
 
 	useEffect(() => {

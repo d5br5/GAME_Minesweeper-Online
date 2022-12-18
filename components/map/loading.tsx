@@ -4,7 +4,7 @@ import { Alert } from "@mui/material";
 const Loading = () => {
 	return (
 		<Container>
-			<Alert icon={false} severity="success" c>
+			<Alert icon={false} severity="success">
 				스튜디오 정보를 불러오고 있습니다.
 			</Alert>
 		</Container>
